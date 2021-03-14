@@ -3,7 +3,7 @@ const fs = require('fs');
 const marked = require('marked');
 
 const parseMdToHtml = (contentRoot) => (req, res, next) => {
-    const urlPath = req.path;
+    const urlPath = sanitize(req.path);
     try {
         fs.readFile(
             path.join(__dirname, `../${contentRoot}${urlPath}/index.md`),
@@ -20,5 +20,10 @@ const parseMdToHtml = (contentRoot) => (req, res, next) => {
         next(error);
     }
 };
+
+function sanitize(path) {
+    // TODO: imrpove sanitization
+    return path.replace(/\.\.\//g, '');
+}
 
 module.exports = parseMdToHtml;
